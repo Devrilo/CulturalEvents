@@ -1,0 +1,60 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@model CulturalEvents.Models.Accounts.AccountsListModel
+@{
+	ViewData["Title"] = "Index";
+}
+
+@{
+	if (HttpContextAccessor.HttpContext.Request.Cookies["admin"] == "1")
+	{
+	}
+	else
+	{
+		HttpContextAccessor.HttpContext.Response.Redirect("/Home/Privacy");
+	}
+}
+
+<body style="background-color: black; color: #9d9d9d">
+	<div style="width: 80%; color: #9d9d9d;  background-color: #222; position: fixed; top: 12.5%; height: 30%; border-style: solid; border-width: 5px; border-color: orangered; border-radius: 5px;">
+		<h3>Użytkownicy</h3>
+		<div id="eventsTable">
+			<table class="table table-condensed" id="eventsIndexTable">
+				<thead>
+					<tr>
+						<th>Id</th>
+						<th>Email</th>
+						<th>Imię</th>
+						<th>Nazwisko</th>
+						<th>Telefon</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var a in Model.Accounts)
+					{
+						<tr class="eventRow">
+
+							<td class="">
+								<a asp-controller="Accounts" asp-action="Edit" asp-route-id="@a.Id">
+									@a.Id
+								</a>
+							</td>
+							<td class="">
+								@a.Email
+							</td>
+							<td class="">
+								@a.Name
+							</td>
+							<td class="">
+								@a.Surname
+							</td>
+							<td class="">
+								@a.Telephone
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+

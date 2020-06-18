@@ -1,0 +1,83 @@
+﻿@model CulturalEvents.Models.Events.EventsEditModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+	ViewData["Title"] = "Detail";
+}
+
+@{
+	if ((HttpContextAccessor.HttpContext.Request.Cookies["user"] != null
+		&& int.Parse(HttpContextAccessor.HttpContext.Request.Cookies["user"]) == Model.CreatorId)
+		|| HttpContextAccessor.HttpContext.Request.Cookies["admin"] == "1")
+	{
+	}
+	else
+	{
+		HttpContextAccessor.HttpContext.Response.Redirect("/Home/Privacy");
+	}
+}
+
+<body style="background-color: black; color: #9d9d9d">
+	<div style="width: 80%; color: #9d9d9d;  background-color: #222; position: fixed; top: 12.5%; height: 82%; border-style: solid; border-width: 5px; border-color: orangered; border-radius: 5px;">
+		<h2 style="text-align: center; margin-top: 2%">Edycj wydarzenia</h2>
+		@using (Html.BeginForm("Change", "Events", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+		{
+			<div style="float: left; width: 33.3%; display: block; height: inherit;">
+				<div>
+					<h4 style="text-align: center; margin-top: 3%">Nazwa wydarzenia:</h4>
+					@Html.TextBoxFor(e => e.Title, new { @Value = Model.Title, @style = "width: 90%; margin-left: 5%; height: 22px; font-size: 16px; background-color: black; border-color: black" })
+				</div>
+				<div>
+					<h4 style="text-align: center; margin-top: 5%">Nazwa miasta:</h4>
+					@Html.TextBoxFor(e => e.City, new { @Value = Model.City, @style = "width: 90%; margin-left: 5%; height: 22px; font-size: 16px; background-color: black; border-color: black" })
+				</div>
+				<div>
+					<h4 style="text-align: center; margin-top: 5%">Nazwa ulicy:</h4>
+					@Html.TextBoxFor(e => e.Street, new { @Value = Model.Street, @style = "width: 90%; margin-left: 5%; height: 22px; font-size: 16px; background-color: black; border-color: black" })
+				</div>
+				<div>
+					<h4 style="text-align: center; margin-top: 5%">Numer domu:</h4>
+					@Html.TextBoxFor(e => e.HouseNumber, new { @Value = Model.HouseNumber, @style = "width: 90%; margin-left: 5%; height: 22px; font-size: 16px; background-color: black; border-color: black" })
+				</div>
+				<div>
+					<h4 style="text-align: center; margin-top: 5%">Numer lokalu:</h4>
+					@Html.TextBoxFor(e => e.ApartmentNumber, new { @Value = Model.ApartmentNumber, @style = "width: 90%; margin-left: 5%; height: 22px; font-size: 16px; background-color: black; border-color: black" })
+				</div>
+				<div>
+					<h4 style="text-align: center; margin-top: 5%">Kod pocztowy:</h4>
+					@Html.TextBoxFor(e => e.PostalCode, new { @Value = Model.PostalCode, @style = "width: 90%; margin-left: 5%; height: 22px; font-size: 16px; background-color: black; border-color: black" })
+				</div>
+			</div>
+			<div style="margin-left: 33.3%; margin-right: 33.3%; width: 33.3%; display: block; height: inherit;">
+				<div>
+					<h4 style="text-align: center; padding-top: 3%">Data rozpoczęcia:</h4>
+					<input name="DateStart" type="datetime-local" value=@Model.DateStart.ToString("yyyy-MM-ddTHH:mm") style="background-color: black; border-color: black; width: 100%; height: 22px; font-size: 16px;">
+				</div>
+				<div>
+					<h4 style="text-align: center; margin-top: 5%">Data zakończenia:</h4>
+					<input name="DateEnd" type="datetime-local" value=@Model.DateEnd.ToString("yyyy-MM-ddTHH:mm") style="background-color: black; border-color: black; width: 100%; height: 22px; font-size: 16px;">
+				</div>
+				<div>
+					<h4 style="text-align: right; margin-top: 5%">Opis:</h4>
+					@Html.TextAreaFor(e => e.Description, 8, 97, new { @Value = Model.Description, @style = "background-color: black; border-color: black" })
+				</div>
+				<input type="hidden" name="id" value="@Model.Id" />
+				<div style="position: fixed; justify-content: center; top: 30%; left: 66.5%">
+					<h4 style="position: fixed; justify-content: center; top: 23.8%; left: 72%">Zdjęcie:</h4>
+					<img id="img" src="data:image;base64, @System.Convert.ToBase64String(Model.Picture)" width="217px" height="93px;">
+					<input type="file" accept="image/*" name="picFile" id="picFile" onChange="document.getElementById('img').src = window.URL.createObjectURL(this.files[0])">
+				</div>
+			</div>
+			<div style="position: fixed; justify-content: center; top: 83%; left: 64%">
+				<button type="submit" class="btn btn-info btn-lg" style="background-color: orangered; border-color: orangered">Edytuj wydarzenie</button>
+			</div>
+		}
+		@using (Html.BeginForm("Delete", "Events", FormMethod.Post))
+		{
+			<input type="hidden" name="id" value="@Model.Id" />
+			<div style="position: fixed; justify-content: center; top: 83%; left: 45%">
+				<button type="submit" class="btn btn-info btn-lg" style="background-color: orangered; border-color: orangered">Usuń wydarzenie</button>
+			</div>
+		}
+	</div>
+</body>

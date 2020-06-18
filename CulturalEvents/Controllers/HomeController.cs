@@ -5,14 +5,40 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CulturalEvents.Models;
+using CulturalEventsData;
+using CulturalEvents.Models.Events;
 
 namespace CulturalEvents.Controllers
 {
 	public class HomeController : Controller
 	{
+		private IEvent _events;
+
+		public HomeController(IEvent events)
+		{
+			_events = events;
+		}
+
 		public IActionResult Index()
 		{
-			return View();
+			var eventPaidModels = _events.GetAllPaidEvents();
+
+			var listingEventPaidResult = eventPaidModels
+				.Select(result => new EventsPaidIndexListingModel
+				{
+					Id = result.Id,
+					TopText = result.TopText,
+					BottomText = result.BottomText,
+					PaidPicture = result.Picture
+				});
+
+
+			var model = new EventsIndexModel()
+			{
+				PaidEvents = listingEventPaidResult
+			};
+
+			return View(model);
 		}
 
 		public IActionResult About()

@@ -1,0 +1,37 @@
+﻿@model CulturalEvents.Models.Events.EventsIndexModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+	ViewData["Title"] = "TakingPart";
+}
+
+@{
+	if (HttpContextAccessor.HttpContext.Request.Cookies["user"] != null)
+	{
+	}
+	else
+	{
+		HttpContextAccessor.HttpContext.Response.Redirect("/Login");
+	}
+}
+
+<h1></h1>
+
+<body style="background-color: black">
+	@foreach (var e in Model.Events)
+	{
+		<div class="card" style="width: 60%; margin-left: 20%; margin-bottom: 3%; margin-top: 3%; border-style: solid; border-width: 5px; border-color: orangered; border-radius: 5px; color: #9d9d9d;  background-color: #222; ">
+			<img class="card-img-top" src="data:image;base64,@System.Convert.ToBase64String(e.Picture)" width="100%" height="320px alt="Card image cap">
+			<div class="card-body">
+				<h2 class="card-title">@e.Title</h2>
+				<p class="card-text">@e.DateStart.ToString("yyyy-MM-dd HH:mm")</p>
+				ul. @e.Street @e.HouseNumber/@e.ApartmentNumber, @e.PostalCode @e.City
+				<p>Kategoria: @e.StaticCategory.Name</p>
+				<p>Zainteresowani: @e.GetAccountsCount </p>
+				<a asp-controller="Events" asp-action="Detail" asp-route-id="@e.Id">
+					<button class="btn btn-info btn-lg pull-right" style="background-color: orangered; border-color: orangered; vertical-align: middle; display: flex; align-items: center; position: relative; bottom: 110px; right:70px; margin-bottom: -100px;">Szczegóły</button>
+				</a>
+			</div>
+		</div>
+	}
+</body>
